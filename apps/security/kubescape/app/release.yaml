@@ -1,0 +1,72 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: kubescape
+  namespace: security
+spec:
+  interval: 75m
+  chart:
+    spec:
+      # renovate: registryUrl=https://helm.releases.hashicorp.com
+      chart: kubescape-operator
+      version: 1.27.3
+      sourceRef:
+        kind: HelmRepository
+        name: kubescape-charts
+        namespace: flux-system
+  values:
+    clusterName: "secure-gitops"
+
+    # Account ID (required, use placeholder if not using ARMO SaaS)
+    account: "local-kubernetes"
+
+    # Enable specific capabilities
+    capabilities:
+      continuousScan: true
+      configurationScan: true
+      nodeScan: true
+
+    # Kubescape scheduler configuration for scheduled scans
+    kubescapeScheduler:
+      scanSchedule: "0 * * * *"
+
+    # Resource limits and requests for Kubescape components
+    kubescape:
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1000Mi"
+
+    kubevuln:
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1000Mi"
+
+    operator:
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1000Mi"
+
+    storage:
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1000Mi"
+
+    # Namespace for Kubescape Operator
+    namespace: kubescape
