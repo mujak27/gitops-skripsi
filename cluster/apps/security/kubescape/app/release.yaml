@@ -19,13 +19,13 @@ spec:
     clusterName: "secure-gitops"
 
     # Account ID (required, use placeholder if not using ARMO SaaS)
-    account: "local-kubernetes"
+    account: "local-kubernetes"g
 
     # Enable specific capabilities
     capabilities:
-      continuousScan: true
-      configurationScan: true
-      nodeScan: true
+      continuousScan: enable
+      configurationScan: enable
+      nodeScan: enable
 
     # Kubescape scheduler configuration for scheduled scans
     kubescapeScheduler:
@@ -69,4 +69,4 @@ spec:
           memory: "1000Mi"
 
     # Namespace for Kubescape Operator
-    namespace: kubescape
+    namespace: security
