@@ -32,7 +32,15 @@ spec:
 
     # Kubescape scheduler configuration for scheduled scans
     kubescapeScheduler:
-      scanSchedule: "0 * * * *"
+      scanSchedule: "*/5 * * * *"
+      name: kubescape-scheduler
+      # Detemines what to scan. By default it will scan all resources in the cluster for all frameworks.
+      # Further details can be found here: https://github.com/kubescape/operator?tab=readme-ov-file#trigger-kubescape-scanning
+      requestBody:
+        commands:
+          - CommandName: "kubescapeScan"
+            args:
+              scanV1: {"targetType": "framework", "targetNames": [ "nsa" ] }
 
     # Resource limits and requests for Kubescape components
     kubescape:
