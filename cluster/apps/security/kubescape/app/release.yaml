@@ -21,6 +21,9 @@ spec:
     # Account ID (required, use placeholder if not using ARMO SaaS)
     account: "local-kubernetes"
 
+    configurations:
+      persistence: disable
+
     # Enable specific capabilities
     capabilities:
       continuousScan: enable
@@ -67,6 +70,7 @@ spec:
         limits:
           cpu: "1000m"
           memory: "1000Mi"
+    
 
     # Namespace for Kubescape Operator
     namespace: kubescape
