@@ -19,7 +19,7 @@ spec:
     clusterName: "secure-gitops"
 
     # Account ID (required, use placeholder if not using ARMO SaaS)
-    account: "local-kubernetes"g
+    account: "local-kubernetes"
 
     # Enable specific capabilities
     capabilities:
