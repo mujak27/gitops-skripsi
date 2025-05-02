@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kubescape
-  namespace: security
+  namespace: kubescape
 spec:
   interval: 75m
   chart:
@@ -69,4 +69,4 @@ spec:
           memory: "1000Mi"
 
     # Namespace for Kubescape Operator
-    namespace: security
+    namespace: kubescape
