@@ -1,0 +1,28 @@
+# Policy 3: Restrict Network Traffic
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-network-traffic
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: enforce-default-deny-network
+    match:
+      any:
+      - resources:
+          kinds:
+          - NetworkPolicy
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "NetworkPolicies must implement default-deny for ingress and egress."
+      pattern:
+        spec:
+          policyTypes:
+          - Ingress
+          - Egress
+          ingress: []
+          egress: []
+---

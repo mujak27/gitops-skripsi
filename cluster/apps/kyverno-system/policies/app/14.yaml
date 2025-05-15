@@ -1,0 +1,28 @@
+# Policy 14: Enforce Linux Hardening
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-linux-hardening
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: enforce-seccomp-selinux
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Pods must use RuntimeDefault seccompProfile and SELinux."
+      pattern:
+        spec:
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            seLinuxOptions:
+              type: "?*"
+---

@@ -1,0 +1,22 @@
+# Policy 13: Restrict Exec Permissions
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-exec-permissions
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: block-pods-exec
+    match:
+      any:
+      - resources:
+          kinds:
+          - Role
+          - ClusterRole
+    validate:
+      message: "RBAC roles must not allow pods/exec permissions."
+      pattern:
+        rules:
+        - resources:
+            - "!pods/exec"
+---

@@ -1,0 +1,25 @@
+# Policy 11: Restrict Host PID and IPC
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-host-pid-ipc
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: restrict-host-pid-ipc
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Pods must not use hostPID or hostIPC."
+      pattern:
+        spec:
+          hostPID: false
+          hostIPC: false
+---

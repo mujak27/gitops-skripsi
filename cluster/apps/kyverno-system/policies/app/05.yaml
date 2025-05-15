@@ -1,0 +1,29 @@
+# Policy 5: Restrict Privileged Containers
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-privileged-containers
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: restrict-privileged
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Privileged containers and unsafe capabilities are not allowed."
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              privileged: false
+              capabilities:
+                drop:
+                - ALL
+---

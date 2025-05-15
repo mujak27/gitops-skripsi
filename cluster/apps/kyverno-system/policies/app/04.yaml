@@ -1,0 +1,24 @@
+# Policy 4: Disable Service Account Token
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disable-service-account-token
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: disable-automount-token
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "ServiceAccount tokens must not be automatically mounted."
+      pattern:
+        spec:
+          automountServiceAccountToken: false
+---

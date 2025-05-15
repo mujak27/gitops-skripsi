@@ -1,0 +1,31 @@
+# Policy 9: Restrict ConfigMap Secrets
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-configmap-secrets
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: block-sensitive-configmaps
+    match:
+      any:
+      - resources:
+          kinds:
+          - ConfigMap
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      deny:
+        conditions:
+        - key: "{{ request.object.data | keys(@)[?contains(@, 'password')] | length(@) }}"
+          operator: GreaterThan
+          value: 0
+        - key: "{{ request.object.data | keys(@)[?contains(@, 'secret')] | length(@) }}"
+          operator: GreaterThan
+          value: 0
+        - key: "{{ request.object.data | keys(@)[?contains(@, 'token')] | length(@) }}"
+          operator: GreaterThan
+          value: 0
+---

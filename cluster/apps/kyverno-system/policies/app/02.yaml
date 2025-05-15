@@ -1,0 +1,26 @@
+# Policy 2: Enforce Non-Root Containers
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-non-root-containers
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: enforce-non-root
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Containers must run as non-root users."
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              runAsNonRoot: true
+---

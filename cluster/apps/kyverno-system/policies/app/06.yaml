@@ -1,0 +1,24 @@
+# Policy 6: Restrict Host Network
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-host-network
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: restrict-host-network
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Pods must not use hostNetwork."
+      pattern:
+        spec:
+          hostNetwork: false
+---

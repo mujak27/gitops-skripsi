@@ -1,0 +1,38 @@
+# Policy 1: Require CPU and Memory Limits
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-cpu-memory-limits
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: enforce-cpu-memory-limits
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          - Deployment
+          - StatefulSet
+          - DaemonSet
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      anyPattern:
+      - spec:
+          containers:
+          - resources:
+              limits:
+                cpu: "?*"
+                memory: "?*"
+      - spec:
+          template:
+            spec:
+              containers:
+              - resources:
+                  limits:
+                    cpu: "?*"
+                    memory: "?*"
+---

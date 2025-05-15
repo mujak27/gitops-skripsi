@@ -1,0 +1,22 @@
+# Policy 12: Restrict Admin Roles
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-admin-roles
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: restrict-wildcard-permissions
+    match:
+      any:
+      - resources:
+          kinds:
+          - Role
+          - ClusterRole
+    validate:
+      message: "RBAC roles must not use wildcard permissions."
+      pattern:
+        rules:
+        - verbs:
+            - "!*"
+---

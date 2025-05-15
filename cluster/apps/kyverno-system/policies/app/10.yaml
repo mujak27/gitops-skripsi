@@ -1,0 +1,26 @@
+# Policy 10: Restrict Host Port
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-host-port
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: restrict-host-port
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Pods must not use hostPort."
+      pattern:
+        spec:
+          containers:
+          - ports:
+              hostPort: null
+---

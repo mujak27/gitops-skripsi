@@ -1,0 +1,27 @@
+# Policy 8: Disable Privilege Escalation
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disable-privilege-escalation
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: disable-privilege-escalation
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Privilege escalation must be disabled."
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              allowPrivilegeEscalation: false
+              privileged: false
+---

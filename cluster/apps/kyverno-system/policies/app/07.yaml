@@ -1,0 +1,26 @@
+# Policy 7: Enforce Immutable Filesystem
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-immutable-filesystem
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: enforce-readonly-filesystem
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - "!kube-system"
+          - "!flux-system"
+          - "!kyverno-system"
+    validate:
+      message: "Containers must use read-only root filesystems."
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              readOnlyRootFilesystem: true
+---
